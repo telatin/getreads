@@ -9,7 +9,7 @@ nextflow.enable.dsl = 2
 params.list = "list.txt"
 params.outdir = "$baseDir/reads"
 
-include { URLS; WGET; COLLECT } from './modules/misc'
+include { URLS; WGET; COLLECT; SPLIT } from './modules/misc'
 include { FFQ } from './modules/ffq'
 include { STATS } from './modules/seqfu'
 /* 
@@ -39,7 +39,11 @@ log.info """
 workflow {
     FFQ(ids)
     URLS(FFQ.out)
-    WGET(URLS.out)
-    STATS(WGET.out.collect())
+    SPLIT(URLS.out)
+    WGET((SPLIT.out).flatMap { id, paths -> 
+        paths.collect { [id, it] }
+    })
+    STATS(WGET.out)
+    STATS.out.view()
     COLLECT(STATS.out.map{it -> it[1]}.collect())
 }

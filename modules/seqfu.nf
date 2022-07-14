@@ -1,17 +1,16 @@
 
 process STATS {
-    
     tag "$id"
 
     input:
-    tuple val(id), file("*.gz")
+    tuple val(id), file(fastq)
     
     
     output:
-    path("${id}.stats")
+    tuple val(id), path("*.stats")
 
     script:
     """
-    seqfu stats *.gz > ${id}.stats
+    seqfu stats ${fastq}  > ${id}.stats
     """
 }

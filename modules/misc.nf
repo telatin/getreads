@@ -16,6 +16,20 @@ process URLS {
     """
 }
 
+process SPLIT {
+    tag "$id"
+    
+    input:
+    tuple val(id), path(file)  
+
+    output:
+    tuple val(id), file("${id}_*")
+
+    script:
+    """
+    split -l 1 ${file} ${id}_
+    """
+}
 process WGET {
     tag "$id"
 
@@ -27,16 +41,16 @@ process WGET {
     
     
     output:
-    tuple val(id), file("${id}*.gz")
+    tuple val(id), file("*.gz")
 
     script:
     """
-    cat "$file" | xargs wget
+    cat "$file" | xargs wget 
     """
 }
 
 process COLLECT {
-    publishDir "$params.outdir/stats/", 
+    publishDir "$params.outdir/", 
         mode: 'copy'
     
     input:
@@ -47,7 +61,7 @@ process COLLECT {
 
     script:
     """
-    head -n 1 *.stats | head -n 1 > stats.txt
-    grep -v "Total bases" *.stats > stats.txt
+    cat *.stats | head -n 1 > stats.txt
+    grep -v "Total bp" *.stats | cut -f 2 -d : | sort  >> stats.txt
     """
 }
