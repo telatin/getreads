@@ -1,3 +1,4 @@
 .nextflow*
 DS_*
 work
+test/out
