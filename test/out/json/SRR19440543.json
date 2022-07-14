@@ -1,0 +1,40 @@
+{
+    "SRR19440543": {
+        "accession": "SRR19440543",
+        "experiment": "SRX15493702",
+        "study": "SRP377521",
+        "sample": "SRS13208816",
+        "title": "Illumina MiSeq paired end sequencing; 16S sequencing of  rectal swabs from Homo sapiens with Appendicitis",
+        "attributes": {
+            "ENA-FIRST-PUBLIC": "2022-05-30",
+            "ENA-LAST-UPDATE": "2022-05-30"
+        },
+        "files": {
+            "ftp": [
+                {
+                    "accession": "SRR19440543",
+                    "filename": "SRR19440543_1.fastq.gz",
+                    "filetype": "fastq",
+                    "filesize": 3167612,
+                    "filenumber": 1,
+                    "md5": "bfde6a4db1021f7df2aae81381e56737",
+                    "urltype": "ftp",
+                    "url": "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR194/043/SRR19440543/SRR19440543_1.fastq.gz"
+                },
+                {
+                    "accession": "SRR19440543",
+                    "filename": "SRR19440543_2.fastq.gz",
+                    "filetype": "fastq",
+                    "filesize": 5096762,
+                    "filenumber": 2,
+                    "md5": "0115518dba6939455934f170c505b1ba",
+                    "urltype": "ftp",
+                    "url": "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR194/043/SRR19440543/SRR19440543_2.fastq.gz"
+                }
+            ],
+            "aws": [],
+            "gcp": [],
+            "ncbi": []
+        }
+    }
+}
