@@ -84,3 +84,20 @@ process CHECK {
     """
 
 }
+
+process TABLE {
+    publishDir "$params.outdir/", 
+        mode: 'copy'
+    
+    input:
+    path("*")
+
+    output:
+    path("table.tsv"), optional: true
+
+    script:
+    """
+    table.py *.json > table.tsv
+    """
+
+}

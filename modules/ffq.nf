@@ -39,3 +39,25 @@ process FFQ  {
     sleep $sleep
     """
 }
+
+
+process FFQ_NORETRY  {
+    tag "$id(${sleep}s)"
+    label "error_retry"
+    publishDir "$params.outdir/json/", 
+        mode: 'copy'
+    
+    input:
+    val id
+    val sleep
+    
+    
+    output:
+    tuple val(id), path("*.json"), optional: true
+
+    script:
+    """
+    ffq "$id" > "${id}.json"
+    sleep $sleep
+    """
+}

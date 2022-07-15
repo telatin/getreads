@@ -11,7 +11,7 @@ params.wait = 2
 params.queue = false
 params.debug = false
 
-include { URLS; WGET; COLLECT; SPLIT; CHECK } from './modules/misc'
+include { URLS; WGET; COLLECT; SPLIT; CHECK; TABLE } from './modules/misc'
 include { FFQ; FFQLIST } from './modules/ffq'
 include { STATS } from './modules/seqfu'
 /* 
@@ -39,7 +39,7 @@ log.info """
          ===================================
          list         : ${params.list}
          outdir       : ${params.outdir}
-         wait         : ${param.wait} s
+         wait         : ${params.wait} s
          """
          .stripIndent()
 
@@ -74,4 +74,5 @@ workflow {
     STATS(WGET.out)
     COLLECT(STATS.out.map{it -> it[1]}.collect())
     CHECK(COLLECT.out, file(params.list, checkIfExists: true))
+    TABLE(FFQ.out.collect())
 }
