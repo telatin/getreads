@@ -16,6 +16,8 @@ Where:
 * `--wait INT` is the number of seconds to wait after running _ffq_ [default: 2]
 * `--single` will run a single job for _ffq_ to reduce the queries to NCBI
 
+* `-profile docker` will used Docker for dependencies. An easy alternative is to create a conda environment using `deps/env.yaml`. Singularity is supported but untested (usually clusters with singularity are offline anyway)
+  
 ## :open_file_folder: Output
 
 The output directory contains:
