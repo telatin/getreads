@@ -8,11 +8,12 @@
 nextflow.enable.dsl = 2
 params.list = "test/list.txt"
 params.wait = 2
+params.ignore = false
 params.queue = false
 params.debug = false
 
 include { URLS; WGET; COLLECT; SPLIT; CHECK; TABLE } from './modules/misc'
-include { FFQ; FFQLIST } from './modules/ffq'
+include { FFQ; FFQLIST; FFQ_NORETRY} from './modules/ffq'
 include { STATS } from './modules/seqfu'
 /* 
  *   DSL2 allows to reuse channels
@@ -39,6 +40,7 @@ log.info """
          ===================================
          list         : ${params.list}
          outdir       : ${params.outdir}
+         ignore-err   : ${params.ignore}
          wait         : ${params.wait} s
          """
          .stripIndent()
@@ -60,8 +62,14 @@ workflow SINGLE {
 }
 
 workflow {
-    FFQ(ids, params.wait)
-    URLS(FFQ.out)
+    if (params.ignore) {
+        DATA = FFQ_NORETRY(ids, params.wait)
+    } else {
+        DATA = FFQ(ids, params.wait)
+    }
+    //FFQ(ids, params.wait)
+    //URLS(FFQ.out)
+    URLS(DATA)
     SPLIT(URLS.out)
     urls = (SPLIT.out).transpose()
     
@@ -74,5 +82,6 @@ workflow {
     STATS(WGET.out)
     COLLECT(STATS.out.map{it -> it[1]}.collect())
     CHECK(COLLECT.out, file(params.list, checkIfExists: true))
-    TABLE(FFQ.out.collect())
+    //TABLE(FFQ.out.collect())
+    TABLE(DATA.map{it -> it[1]}.collect())
 }
