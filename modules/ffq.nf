@@ -31,6 +31,26 @@ process FFQ  {
     
     
     output:
+    tuple val(id), path("*.json"), optional: true
+
+    script:
+    """
+    ffq-sake.py $id  --retry 6 --pause $sleep --verbose 2>&1 > "${id}.log"
+    """
+}
+
+process FFQ_V1  {
+    tag "$id(${sleep}s)"
+    label "error_retry"
+    publishDir "$params.outdir/json/", 
+        mode: 'copy'
+    
+    input:
+    val id
+    val sleep
+    
+    
+    output:
     tuple val(id), path("*.json")
 
     script:
