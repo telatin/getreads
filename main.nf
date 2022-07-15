@@ -40,8 +40,9 @@ log.info """
          ===================================
          list         : ${params.list}
          outdir       : ${params.outdir}
-         ignore-err   : ${params.ignore}
-         wait         : ${params.wait} s
+         wait         : attempt * ${params.wait} s
+
+         [debug-ignore: ${params.ignore}]
          """
          .stripIndent()
 

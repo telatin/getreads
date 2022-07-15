@@ -14,7 +14,6 @@ Where:
 * `--list "list.txt"` is a list of SRA accession IDs in simple text format
 * `--outdir "name"` is the name of the output directory
 * `--wait INT` is the number of seconds to wait after running _ffq_ [default: 2]
-* `--single` will run a single job for _ffq_ to reduce the queries to NCBI
 
 * `-profile docker` will used Docker for dependencies. An easy alternative is to create a conda environment using `deps/env.yaml`. Singularity is supported but untested (usually clusters with singularity are offline anyway)
   
@@ -38,6 +37,11 @@ I made this minimal pipeline as a backup plan.
 
 ## Uses
 
-* [ffq](https://github.com/pachterlab/ffq) to fetch URLs given the accessions
+* [ffq](https://github.com/pachterlab/ffq) to fetch URLs given the accessions, wrapped in _ffq-sake.py_ that retries if NCBI responds with "too many requests", but gracefully fails on 400 error.
 * [wget](https://github.com/mirror/wget) to download the reads
 * [seqfu](https://github.com/telatin/seqfu2) to collect stats
+
+## Screenshot
+
+![Screenshot](docs/imgs/getreads-test.png)
+

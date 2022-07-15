@@ -93,7 +93,8 @@ process TABLE {
     path("*")
 
     output:
-    path("table.tsv"), optional: true
+    path("table.tsv"), emit: table optional true
+    path("*.gz"), emit: reads      optional true
 
     script:
     """

@@ -58,6 +58,11 @@ def tryFFQ(id, outdir, retry_times=3, pause=2.0, verbose=False, bin="ffq"):
             print("  [INFO] Running ffq #%s/%s: %s" % (attempt_number + 1,  retry_times, " ".join([bin, id, "-o", outfile])), file=sys.stderr)
         success, retry = ffq(id, outfile, bin)
         if success:
+            # Check json is not empty
+            data = json.load(open(outfile))
+            if id not in data:
+                print("  [ERROR] Empty json for %s" % id, file=sys.stderr)
+                return False
             return attempt_number + 1
         elif not retry:
             if verbose:
@@ -67,23 +72,6 @@ def tryFFQ(id, outdir, retry_times=3, pause=2.0, verbose=False, bin="ffq"):
         print("  [ERROR] Failed to run ffq for %s" % id, file=sys.stderr)
     return -1
 
-def tryFasterDump(id, outdir, threads=1, verbose=False):
-    cmd = ["fasterq-dump", "--threads", str(threads), "-o", outdir, id]
-    if verbose:
-        print("[INFO] Running fasterdump: %s" % (" ".join(cmd)), file=sys.stderr)
-    
-    try:
-        pipes = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=100*60)
-        _, stderr = pipes.communicate()
-        stderr = stderr.decode("utf-8")
-        if pipes.returncode != 0:
-            print("[ERROR] Error running fasterdump: %s" % stderr, file=sys.stderr)
-            return False
-        else:
-            return True
-    except Exception as e:
-        print("Error running 'fasterdump': %s" % e, file=sys.stderr)
-        return False
 
 if __name__ == "__main__":
     args = argparse.ArgumentParser()
