@@ -62,6 +62,8 @@ if __name__ == "__main__":
     args = argparse.ArgumentParser(prog="check-stats")
     args.add_argument("--stats", help="SeqFu stats file", required=True)
     args.add_argument("--list", help="Initial list file")
+    args.add_argument("--threads", help="Number of threads", type=int, default=1)
+    
     args.add_argument("--fail", help="Fail if missing files", action="store_true")
     args.add_argument("--rescue", help="Rescue if missing files", action="store_true")
     args = args.parse_args()
