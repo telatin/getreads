@@ -66,3 +66,21 @@ process COLLECT {
     grep -v "Total bp" *.stats | cut -f 2 -d : | sort  >> stats.txt
     """
 }
+
+process CHECK {
+    publishDir "$params.outdir/", 
+        mode: 'copy'
+    
+    input:
+    path("stats.txt")
+    path("list.txt")
+
+    output:
+    path("check.*")
+
+    script:
+    """
+    check.py --stats stats.txt --list list.txt > check.txt 2> check.log
+    """
+
+}

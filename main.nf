@@ -11,7 +11,7 @@ params.wait = 2
 params.queue = false
 params.debug = false
 
-include { URLS; WGET; COLLECT; SPLIT } from './modules/misc'
+include { URLS; WGET; COLLECT; SPLIT; CHECK } from './modules/misc'
 include { FFQ; FFQLIST } from './modules/ffq'
 include { STATS } from './modules/seqfu'
 /* 
@@ -39,36 +39,39 @@ log.info """
          ===================================
          list         : ${params.list}
          outdir       : ${params.outdir}
+         wait         : ${param.wait} s
          """
          .stripIndent()
 
 
 workflow SINGLE {
+    /*
+     TODO
+    */
     take:
-    path(list)
+    id_file
 
     main:
-    FFQLIST(list)
+    FFQLIST(id_file)
 
     emit:
     FFQLIST.out
 
 }
+
 workflow {
     FFQ(ids, params.wait)
     URLS(FFQ.out)
     SPLIT(URLS.out)
     urls = (SPLIT.out).transpose()
-    }
+    
 
     if (params.debug) {
-        (SPLIT.out).view()
-        println("----------------------------------------------")
         urls.view()
     }
     
     WGET(urls)
     STATS(WGET.out)
-    STATS.out.view()
     COLLECT(STATS.out.map{it -> it[1]}.collect())
+    CHECK(COLLECT.out, file(params.list, checkIfExists: true))
 }
