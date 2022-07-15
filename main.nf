@@ -10,8 +10,9 @@ params.list = "test/list.txt"
 params.wait = 2
 params.queue = false
 params.debug = false
+
 include { URLS; WGET; COLLECT; SPLIT } from './modules/misc'
-include { FFQ } from './modules/ffq'
+include { FFQ; FFQLIST } from './modules/ffq'
 include { STATS } from './modules/seqfu'
 /* 
  *   DSL2 allows to reuse channels
@@ -41,15 +42,28 @@ log.info """
          """
          .stripIndent()
 
+
+workflow SINGLE {
+    take:
+    path(list)
+
+    main:
+    FFQLIST(list)
+
+    emit:
+    FFQLIST.out
+
+}
 workflow {
     FFQ(ids, params.wait)
     URLS(FFQ.out)
     SPLIT(URLS.out)
-    urls = (SPLIT.out).flatMap{ id, pathlist -> 
-        pathlist.collect { [id, it] }
+    urls = (SPLIT.out).transpose()
     }
 
     if (params.debug) {
+        (SPLIT.out).view()
+        println("----------------------------------------------")
         urls.view()
     }
     
