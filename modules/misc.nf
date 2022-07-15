@@ -4,7 +4,7 @@ process URLS {
         mode: 'copy'
     
     input:
-    tuple val(id), path(file)  
+    tuple val(id), path(jsonfile)  
     
     
     output:
@@ -12,7 +12,7 @@ process URLS {
 
     script:
     """
-    cat "$file" | jq ".\$(basename $file | cut -f 1 -d .).files.ftp[].url" > \$(basename $file | cut -f 1 -d .).txt
+    cat "$jsonfile" | jq ".\$(basename $jsonfile | cut -f 1 -d .).files.ftp[].url" > \$(basename "$jsonfile" | cut -f 1 -d .).txt
     """
 }
 
@@ -23,7 +23,7 @@ process SPLIT {
     tuple val(id), path(file)  
 
     output:
-    tuple val(id), file("${id}_*")
+    tuple val(id), path("${id}_*")
 
     script:
     """
@@ -41,10 +41,11 @@ process WGET {
     
     
     output:
-    tuple val(id), file("*.gz")
+    tuple val(id), path("*.gz")
 
     script:
     """
+    echo \$(cat "$file")
     cat "$file" | xargs wget 
     """
 }
@@ -54,10 +55,10 @@ process COLLECT {
         mode: 'copy'
     
     input:
-    file("*.stats")
+    path("*.stats")
 
     output:
-    file("stats.txt")
+    path("stats.txt")
 
     script:
     """

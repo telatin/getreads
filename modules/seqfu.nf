@@ -3,7 +3,7 @@ process STATS {
     tag "$id"
 
     input:
-    tuple val(id), file(fastq)
+    tuple val(id), path(fastq)
     
     
     output:

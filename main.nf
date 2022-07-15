@@ -6,10 +6,10 @@
  *   Input parameters 
  */
 nextflow.enable.dsl = 2
-params.list = "list.txt"
+params.list = "test/list.txt"
 params.wait = 2
 params.queue = false
-
+params.debug = false
 include { URLS; WGET; COLLECT; SPLIT } from './modules/misc'
 include { FFQ } from './modules/ffq'
 include { STATS } from './modules/seqfu'
@@ -45,9 +45,15 @@ workflow {
     FFQ(ids, params.wait)
     URLS(FFQ.out)
     SPLIT(URLS.out)
-    WGET((SPLIT.out).flatMap { id, paths -> 
-        paths.collect { [id, it] }
-    })
+    urls = (SPLIT.out).flatMap{ id, pathlist -> 
+        pathlist.collect { [id, it] }
+    }
+
+    if (params.debug) {
+        urls.view()
+    }
+    
+    WGET(urls)
     STATS(WGET.out)
     STATS.out.view()
     COLLECT(STATS.out.map{it -> it[1]}.collect())

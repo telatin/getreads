@@ -1,6 +1,6 @@
 
 process FFQ  {
-    tag "$id"
+    tag "$id(${sleep}s)"
     label "error_retry"
     publishDir "$params.outdir/json/", 
         mode: 'copy'
