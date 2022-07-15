@@ -10,9 +10,10 @@ nextflow run andreatelatin/getreads -p docker --list list.txt --outdir sra
 ```
 
 Where:
-* `list.txt` is a list of SRA accession IDs in simple text format
-* `sra` is the name of the output directory
-
+* `--list "list.txt"` is a list of SRA accession IDs in simple text format
+* `--outdir "name"` is the name of the output directory
+* `--wait INT` is the number of seconds to wait after running _ffq_ [default: 2]
+* `--single` will run a single job for _ffq_ to reduce the queries to NCBI
 
 ## Output
 

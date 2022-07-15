@@ -7,7 +7,8 @@
  */
 nextflow.enable.dsl = 2
 params.list = "list.txt"
-params.outdir = "$baseDir/reads"
+params.wait = 2
+params.queue = false
 
 include { URLS; WGET; COLLECT; SPLIT } from './modules/misc'
 include { FFQ } from './modules/ffq'
@@ -26,7 +27,11 @@ Channel
     .map { it[0] }
     .unique()
     .set { ids }  
-    
+
+id_file = Channel
+    .from(file(params.list, checkIfExists: true))
+
+ 
 // prints to the screen and to the log
 log.info """
          GetReads (version 1)
@@ -37,7 +42,7 @@ log.info """
          .stripIndent()
 
 workflow {
-    FFQ(ids)
+    FFQ(ids, params.wait)
     URLS(FFQ.out)
     SPLIT(URLS.out)
     WGET((SPLIT.out).flatMap { id, paths -> 

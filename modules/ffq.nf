@@ -1,11 +1,13 @@
 
 process FFQ  {
     tag "$id"
+    label "error_retry"
     publishDir "$params.outdir/json/", 
         mode: 'copy'
     
     input:
     val id
+    val sleep
     
     
     output:
@@ -14,5 +16,6 @@ process FFQ  {
     script:
     """
     ffq "$id" > "${id}.json"
+    sleep $sleep
     """
 }
