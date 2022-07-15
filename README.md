@@ -45,3 +45,10 @@ I made this minimal pipeline as a backup plan.
 
 ![Screenshot](docs/imgs/getreads-test.png)
 
+## Cite
+
+If you use this pipeline, please cite:
+
+* Gálvez-Merchán, Á., et al. (2022). *Metadata retrieval from sequence databases with ffq*. bioRxiv 2022.05.18.492548.
+* Telatin, A., et al. (2020). *SeqFu: A Suite of Utilities for the Robust and Reproducible Manipulation of Sequence File*s. Bioengineering 2021, 8, 59. [10.3390/bioengineering8050059](https://doi.org/10.3390/bioengineering8050059)
+
