@@ -6,6 +6,18 @@ Check statistics and number of samples downloaded
 import argparse
 import subprocess, sys
 
+
+def check_sra(bin="fasterq-dump"):
+    """
+    Check if ffq is installed.
+    """
+    try:
+        subprocess.check_output([bin, "-h"])
+        return True
+    except:
+        return False
+
+
 def loadstats(file):
     stats = {}
     try:
@@ -45,18 +57,18 @@ def tryFasterDump(id, outdir, threads=1, verbose=False):
     if verbose:
         print("[INFO] Running fasterdump: %s" % (" ".join(cmd)), file=sys.stderr)
     
+    fasterProc = subprocess.Popen(cmd, stderr = subprocess.PIPE) 
     try:
-        pipes = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=100*60)
-        _, stderr = pipes.communicate()
-        stderr = stderr.decode("utf-8")
-        if pipes.returncode != 0:
-            print("[ERROR] Error running fasterdump: %s" % stderr, file=sys.stderr)
-            return False
-        else:
-            return True
-    except Exception as e:
-        print("Error running 'fasterdump': %s" % e, file=sys.stderr)
+        outs, errs = fasterProc.communicate(timeout=2*60*60) # will raise error and kill any process that runs longer than 60 seconds
+    except subprocess.TimeoutExpired as e:
+        fasterProc.kill()
+        outs, errs = fasterProc.communicate()
+        print("[STDOUT] %s" % outs, file=sys.stderr)
+        print("[STDERR] %s" % errs, file=sys.stderr)
+        print("[ERROR] Timeout for fasterdump: %s" % (e), file=sys.stderr)
         return False
+
+
 
 if __name__ == "__main__":
     args = argparse.ArgumentParser(prog="check-stats")
@@ -66,9 +78,16 @@ if __name__ == "__main__":
     
     args.add_argument("--fail", help="Fail if missing files", action="store_true")
     args.add_argument("--rescue", help="Rescue if missing files", action="store_true")
+    args.add_argument("--verbose", help="Verbose mode", action="store_true")
+    
     args = args.parse_args()
     
     stats = loadstats(args.stats)
+
+    has_sra = check_sra()
+    if args.verbose:
+        print("[INFO] SRA toolkit found: %s" % (has_sra), file=sys.stderr)
+
     if args.list:
         ids = loadfile(args.list)
         files_per_id = {}
@@ -96,7 +115,7 @@ if __name__ == "__main__":
                     print(id, "\t", len(files_per_id[id]), "files\tUNEVEN", sep="")
 
             else:
-                if tryFasterDump(id, ".", threads=args.threads, verbose=args.verbose):
+                if has_sra and tryFasterDump(id, ".", threads=args.threads, verbose=args.verbose):
                     print(id, "\t", "? files\tRESCUED", sep="")
                 else:
                     print(id, "\t0 files\t(NOT FOUND)", sep="")
