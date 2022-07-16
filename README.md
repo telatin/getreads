@@ -1,5 +1,7 @@
 # :arrow_down: getreads (aka *ffq-sake*)
 
+[![nextflow-ci](https://github.com/telatin/getreads/actions/workflows/ci.yaml/badge.svg)](https://github.com/telatin/getreads/actions/workflows/ci.yaml)
+
 A minimal pipeline to download FASTQ files from SRA given
 a list of accession IDs.
 
@@ -26,6 +28,7 @@ The output directory contains:
 * :file_folder: **reads** (FASTQ.gz files, a set per accession)
 * :spiral_notepad: **stats.txt** (reads statistics)
 * :spiral_notepad: **check.txt** (a report of number of files per ID downloaded, with control of number of reads per file being equal)
+* :chart: **table.tsv** metadata table from JSON files (only for samples where _ffq_ didn't fail) (_new in 2.0_)
 
 ## Alternatives
 
@@ -44,6 +47,10 @@ I made this minimal pipeline as a backup plan.
 ## Screenshot
 
 ![Screenshot](docs/imgs/getreads-test.png)
+
+* [Notes](test/README.md)
+* [Releases](docs/RELEASES.md)
+
 
 ## Cite
 
