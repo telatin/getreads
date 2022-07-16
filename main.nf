@@ -12,7 +12,7 @@ params.ignore = false
 params.queue = false
 params.debug = false
 
-include { URLS; WGET; COLLECT; SPLIT; CHECK; TABLE } from './modules/misc'
+include { URLS; WGET; COLLECT; SPLIT; CHECK; TABLE; GZIP } from './modules/misc'
 include { FFQ; FFQLIST; FFQ_NORETRY} from './modules/ffq'
 include { STATS } from './modules/seqfu'
 /* 
@@ -36,7 +36,7 @@ id_file = Channel
  
 // prints to the screen and to the log
 log.info """
-         GetReads (version 1)
+         GetReads (version 2)
          ===================================
          list         : ${params.list}
          outdir       : ${params.outdir}
@@ -84,5 +84,6 @@ workflow {
     COLLECT(STATS.out.map{it -> it[1]}.collect())
     CHECK(COLLECT.out, file(params.list, checkIfExists: true))
     //TABLE(FFQ.out.collect())
+    GZIP((CHECK.out.fastq).flatten())
     TABLE(DATA.map{it -> it[1]}.collect())
 }

@@ -1,3 +1,16 @@
+process VERSIONS {
+    publishDir "$params.outdir/", 
+        mode: 'copy'
+    
+    output:
+    path("versions.txt")
+
+    script:
+    """
+    seqfu version >> versions.txt
+    """
+}
+    
 process URLS {
     tag "$id"
     publishDir "$params.outdir/urls/", 
@@ -69,7 +82,10 @@ process COLLECT {
 
 process CHECK {
     publishDir "$params.outdir/", 
-        mode: 'copy'
+        mode: 'copy',
+        pattern: "check.*"
+
+
     
     input:
     path("stats.txt")
@@ -77,14 +93,31 @@ process CHECK {
 
     output:
     path("check.*")
+    path("*.fastq"), emit: fastq optional true
 
     script:
     """
-    check.py --stats stats.txt --list list.txt > check.txt 2> check.log
+    check.py --stats stats.txt --list list.txt --rescue --verbose > check.txt 2> check.log
     """
 
 }
 
+process GZIP {
+    publishDir "$params.outdir/reads/", 
+            mode: 'copy',
+            pattern: "*.gz" 
+    input:
+    path(sym_zip)
+
+    output:
+    path("*.gz")
+
+    script:
+    real_zip = "readlink -f ${sym_zip}"
+    """
+    gzip -f "\$(${real_zip})" > "\$(basename ${sym_zip}).gz"
+    """
+}
 process TABLE {
     publishDir "$params.outdir/", 
         mode: 'copy'

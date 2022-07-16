@@ -20,8 +20,9 @@ process FFQLIST  {
 
 
 process FFQ  {
-    tag "$id(${sleep}s)"
-    label "error_retry"
+    // Wrapper ffq-sake will exit gracefully and manage retries
+    tag "$id:${sleep}s"
+    
     publishDir "$params.outdir/json/", 
         mode: 'copy'
     
@@ -43,7 +44,7 @@ process FFQ  {
     """
 }
 
-process FFQ_V1  {
+process VANILLA_FFQ  {
     tag "$id(${sleep}s)"
     label "error_retry"
     publishDir "$params.outdir/json/", 

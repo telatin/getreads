@@ -53,13 +53,22 @@ def loadfile(file):
 
 
 def tryFasterDump(id, outdir, threads=1, verbose=False):
-    cmd = ["fasterq-dump", "--threads", str(threads), "-o", outdir, id]
+    cmd = ["fasterq-dump", "--threads", str(threads), "-O", outdir, id]
     if verbose:
         print("[INFO] Running fasterdump: %s" % (" ".join(cmd)), file=sys.stderr)
     
     fasterProc = subprocess.Popen(cmd, stderr = subprocess.PIPE) 
     try:
         outs, errs = fasterProc.communicate(timeout=2*60*60) # will raise error and kill any process that runs longer than 60 seconds
+        if verbose:
+            print("   info: %s" % (outs), file=sys.stderr)
+            print("   log: %s" % (errs), file=sys.stderr)
+
+        # Check exit status
+        if fasterProc.returncode != 0:
+            print("  [ERROR] Error running fasterdump: %s" % (errs), file=sys.stderr)
+            return False
+        return True
     except subprocess.TimeoutExpired as e:
         fasterProc.kill()
         outs, errs = fasterProc.communicate()
@@ -74,7 +83,8 @@ if __name__ == "__main__":
     args = argparse.ArgumentParser(prog="check-stats")
     args.add_argument("--stats", help="SeqFu stats file", required=True)
     args.add_argument("--list", help="Initial list file")
-    args.add_argument("--threads", help="Number of threads", type=int, default=1)
+    args.add_argument("--threads", help="Number of threads [default: %(default)s]", type=int, default=1)
+    args.add_argument("--outdir", help="Output directory [default: %(default)s]", default=".")
     
     args.add_argument("--fail", help="Fail if missing files", action="store_true")
     args.add_argument("--rescue", help="Rescue if missing files", action="store_true")
@@ -93,6 +103,7 @@ if __name__ == "__main__":
         files_per_id = {}
         missing_ids = []
         bad_counts_ids = []
+        rescued_ids = []
         for id in ids:
             for readfile in stats:
                 if id in readfile:
@@ -115,11 +126,19 @@ if __name__ == "__main__":
                     print(id, "\t", len(files_per_id[id]), "files\tUNEVEN", sep="")
 
             else:
-                if has_sra and tryFasterDump(id, ".", threads=args.threads, verbose=args.verbose):
-                    print(id, "\t", "? files\tRESCUED", sep="")
+                success = tryFasterDump(id, args.outdir, threads=args.threads, verbose=args.verbose) if has_sra else False
+                if success:
+                    
+                    print(id, "\t", "1+ files\tRESCUED", sep="")
+                    rescued_ids.append(id)
                 else:
                     print(id, "\t0 files\t(NOT FOUND)", sep="")
                     missing_ids.append(id)
+
+        if len(rescued_ids) > 0:
+            print("[INFO] Rescued %i IDs" % (len(rescued_ids)), file=sys.stderr)
+
+    
 
         if len(missing_ids)>0 or len(bad_counts_ids)>0:
             if len(bad_counts_ids)>0:

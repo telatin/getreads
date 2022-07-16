@@ -1,0 +1,18 @@
+Channel.of(['SRR19440543', 'SRR19440543_aa', 'SRR19440543_ab' ,'SRR19440534'])
+                  .flatten()
+                  .set{ my }
+
+process MY {
+    input:
+    file(x)
+
+    output:
+    stdout
+
+    """
+    echo $x
+    """
+}
+workflow {
+    MY(my)
+}
