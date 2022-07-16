@@ -41,6 +41,6 @@ jobs:
           sudo mv nextflow /usr/local/bin/
       - name: Test building pizzly references
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker 
-          #--outdir /home/runner/work/getreads-out \
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker || find /home/runner/work/getreads/getreads/work/ -name "*.log" | xargs grep "^."
+          
          
