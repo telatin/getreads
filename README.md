@@ -28,7 +28,7 @@ The output directory contains:
 * :file_folder: **reads** (FASTQ.gz files, a set per accession)
 * :spiral_notepad: **stats.txt** (reads statistics)
 * :spiral_notepad: **check.txt** (a report of number of files per ID downloaded, with control of number of reads per file being equal)
-* :chart: **table.tsv** metadata table from JSON files (only for samples where _ffq_ didn't fail) (_new in 2.0_)
+* :spiral_notepad: **table.tsv** metadata table from JSON files (only for samples where _ffq_ didn't fail) (_new in 2.0_)
 
 ## Alternatives
 
