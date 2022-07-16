@@ -40,7 +40,7 @@ process FFQ  {
     # while aborting on error 400 (bad request)
     # at each new attempt a pause of attempts*sleep is inserted
 
-    ffq-sake.py $id  --retry 6 --pause $sleep --verbose 2>&1 > "${id}.log"
+    ffq-sake.py $id  --retry 6 --pause $sleep --verbose 2>&1 | tee "${id}.log"
     """
 }
 
