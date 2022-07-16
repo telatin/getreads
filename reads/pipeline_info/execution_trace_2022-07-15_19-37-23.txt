@@ -1,5 +1,0 @@
-task_id	hash	native_id	name	status	exit	submit	duration	realtime	%cpu	peak_rss	peak_vmem	rchar	wchar
-1	ee/a6aff8	9029	MY (1)	COMPLETED	0	2022-07-15 19:37:24.061	78ms	0ms	-	-	-	-	-
-2	58/dbf94e	9030	MY (2)	COMPLETED	0	2022-07-15 19:37:24.078	72ms	0ms	-	-	-	-	-
-4	51/34cf63	9084	MY (4)	COMPLETED	0	2022-07-15 19:37:24.144	79ms	0ms	-	-	-	-	-
-3	71/0d9c5f	9086	MY (3)	COMPLETED	0	2022-07-15 19:37:24.158	68ms	0ms	-	-	-	-	-
