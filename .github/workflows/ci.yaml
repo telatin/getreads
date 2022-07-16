@@ -14,7 +14,7 @@ jobs:
   test:
     name: Run pipeline with test data
     # Only run on push if this is the nf-core dev branch (merged PRs)
-    if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'quadram-institute-bioscience/getreads') }}"
+    if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'telatin/getreads') }}"
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -41,12 +41,6 @@ jobs:
           sudo mv nextflow /usr/local/bin/
       - name: Test building pizzly references
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker \
-          --outdir /home/runner/work/rnafusion/rnafusion/results --pizzly --fusionreport \
-          --build_references --genomes_base /home/runner/work/rnafusion/rnafusion/results/references \
-          --cosmic_username ${{ secrets.COSMIC_USERNAME }} --cosmic_passwd ${{ secrets.COSMIC_PASSWD }}
-      - name: Test running pizzly references
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker \
-          --outdir /home/runner/work/rnafusion/rnafusion/results --pizzly \
-          --genomes_base /home/runner/work/rnafusion/rnafusion/results/references -stub
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker 
+          #--outdir /home/runner/work/getreads-out \
+         
