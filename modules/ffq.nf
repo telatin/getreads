@@ -21,7 +21,7 @@ process FFQLIST  {
 
 process FFQ  {
     // Wrapper ffq-sake will exit gracefully and manage retries
-    tag "$id:${sleep}s"
+    tag "$id:${sleep}s:${task.cpus}"
     
     publishDir "$params.outdir/json/", 
         mode: 'copy'
@@ -39,10 +39,10 @@ process FFQ  {
     # ffq-sake will not die if ffq fails, but will retry on error 429 (rate limit),
     # while aborting on error 400 (bad request)
     # at each new attempt a pause of attempts*sleep is inserted
-    
+
     ffq --help 2>&1 | grep ^ffq
 
-    ffq-sake.py $id  --retry 6 --pause $sleep --verbose 2>&1 | tee "${id}.log"
+    ffq-sake.py $id  --retry 6 --pause $sleep --thread ${task.cpus} --verbose 2>&1 | tee "${id}.log"
 
     
     """

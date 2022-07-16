@@ -39,7 +39,7 @@ jobs:
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
-      - name: Test building pizzly references
+      - name: Test pipeline
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker || find /home/runner/work/getreads/getreads/work/ -name "*.log" | xargs grep "^."
           
