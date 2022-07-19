@@ -9,7 +9,7 @@ manifest {
 }
 
 params {
-    outdir = "$baseDir/reads"
+    outdir = "$baseDir/getreads/"
     tracedir = "${params.outdir}/pipeline_info"
 
     // Defaults only, expecting to be overwritten
