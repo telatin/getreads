@@ -55,8 +55,9 @@ if args.string is not None:
         for file in files:
             if args.string in file:
                 checked_files.append(os.path.join(root, file))
-                if remove(os.path.join(root, file), args.dry):
-                    removed_files.append(os.path.join(root, file))
-                empty_files.append(os.path.join(root, file))
+                if isEmpty(os.path.join(root, file)):
+                    if remove(os.path.join(root, file), args.dry):
+                        removed_files.append(os.path.join(root, file))
+                    empty_files.append(os.path.join(root, file))
 
 print("%s files checked, %s empty, %s removed" % (len(checked_files), len(empty_files), len(removed_files)), file=sys.stderr)
