@@ -99,7 +99,7 @@ process CHECK {
     """
     check.py --stats stats.txt --list list.txt --rescue --verbose --threads ${task.cpus} > check.txt 2> check.log
     grep . check.*
-    rmIfEmpty -s fastq -d . --verbose
+    rmIfEmpty.py -s fastq -d . --verbose
     """
 
 }
