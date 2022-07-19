@@ -43,7 +43,7 @@ log.info """
          wait         : attempt * ${params.wait} s
 
          [debug-ignore: ${params.ignore}]
-         [resoruces   : ${params.max_cpus}; ${params.max_memory};${params.max_time}]
+         [resources   : ${params.max_cpus}; ${params.max_memory};${params.max_time}]
          """
          .stripIndent()
 
