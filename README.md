@@ -8,7 +8,9 @@ a list of accession IDs.
 ## :magic_wand: Usage
 
 ```bash
-nextflow run andreatelatin/getreads -p docker --list list.txt --outdir sra
+# Suggestion: replace main with a version from the releases 
+nextflow run andreatelatin/getreads -r main \
+  -p docker --list list.txt --outdir sra
 ```
 
 Where:
