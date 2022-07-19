@@ -11,8 +11,9 @@ params.wait = 2
 params.ignore = false
 params.queue = false
 params.debug = false
+ 
 
-include { URLS; WGET; COLLECT; SPLIT; CHECK; TABLE; GZIP } from './modules/misc'
+include { IS_ONLINE; URLS; WGET; COLLECT; SPLIT; CHECK; TABLE; GZIP } from './modules/misc'
 include { FFQ; FFQLIST; FFQ_NORETRY} from './modules/ffq'
 include { STATS } from './modules/seqfu'
 /* 
@@ -64,10 +65,11 @@ workflow SINGLE {
 }
 
 workflow {
+    IS_ONLINE()
     if (params.ignore) {
-        DATA = FFQ_NORETRY(ids, params.wait)
+        DATA = FFQ_NORETRY(ids, params.wait, IS_ONLINE.out)
     } else {
-        DATA = FFQ(ids, params.wait)
+        DATA = FFQ(ids, params.wait, IS_ONLINE.out)
     }
     //FFQ(ids, params.wait)
     //URLS(FFQ.out)
@@ -79,9 +81,9 @@ workflow {
     if (params.debug) {
         urls.view()
     }
-    
     WGET(urls)
     STATS(WGET.out)
+
     COLLECT(STATS.out.map{it -> it[1]}.collect())
     CHECK(COLLECT.out, file(params.list, checkIfExists: true))
     //TABLE(FFQ.out.collect())

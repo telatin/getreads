@@ -6,10 +6,11 @@ import sys
 
 def isEmpty(path):
     if os.path.isfile(path):
-        return os.stat(path).st_size == 0
+        return os.stat(path,  follow_symlinks=True).st_size == 0
     else:
         return False
 
+ 
 def remove(file, dry=False):
     if dry:
         print("DRY-RUN removing: " + file, file=sys.stderr)

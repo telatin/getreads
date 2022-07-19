@@ -29,6 +29,7 @@ process FFQ  {
     input:
     val id
     val sleep
+    path "online.log"
     
     
     output:
@@ -79,7 +80,7 @@ process FFQ_NORETRY  {
     input:
     val id
     val sleep
-    
+    path "online.log"
     
     output:
     tuple val(id), path("*.json"), optional: true

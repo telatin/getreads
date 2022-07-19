@@ -8,9 +8,20 @@ process VERSIONS {
     script:
     """
     seqfu version >> versions.txt
+    ffq -h | grep '^ffq' >> versions.txt
+    fasterq-dump --version | grep . >> versions.txt
     """
 }
     
+process IS_ONLINE {
+    output:
+    path("online.log")
+
+    script:
+    """
+    checkConnection.py 2>&1 | grep "Internet available" > online.log
+    """
+}
 process URLS {
     tag "$id"
     publishDir "$params.outdir/urls/", 

@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 """
-Check statistics and number of samples downloaded
+Gather information about the samples (JSON from ffq)
+and print a table of the results.
 """
 
 import argparse
 import os, sys, json
  
 if __name__ == "__main__":
-    args = argparse.ArgumentParser(prog="check-stats")
+    args = argparse.ArgumentParser(prog="table")
     args.add_argument("FILES", help="ffq JSON files", nargs="+")
     args = args.parse_args()
     
