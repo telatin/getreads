@@ -19,7 +19,7 @@ process IS_ONLINE {
 
     script:
     """
-    checkConnection.py 2>&1 | grep "Internet available" > online.log
+    checkConnection.py 2>&1 > online.log
     """
 }
 process URLS {
