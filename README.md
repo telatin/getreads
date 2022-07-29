@@ -9,7 +9,7 @@ a list of accession IDs.
 
 ```bash
 # Suggestion: replace main with a version from the releases 
-nextflow run andreatelatin/getreads -r main \
+nextflow run telatin/getreads -r main \
   -p docker --list list.txt --outdir sra
 ```
 
