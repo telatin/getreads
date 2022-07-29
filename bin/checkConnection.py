@@ -11,26 +11,30 @@ import os
 import sys
 import logging
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s]    %(message)s')
 logger = logging.getLogger(__name__)
 start_time = time.time()
 cmds = [
-    ["curl", "-I", "https://linuxconfig.org"],
     ["ping", "-c", "3", "google.com"],
-    ["curl", "ifconfig.me"],
-    [""]
+    ["wget", "--output-document", "-", "github.com"],
+    ["wget", "--output-document", "-", "bing.com"],
+    ["curl", "-I", "https://linuxconfig.org"],
+    ["curl", "ifconfig.me"]
 ]
 logger.info("Checking for Internet connection with %s commands", len(cmds))
-for cmd in cmds:
-    try:
-        test = subprocess.check_call(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-        logger.info("%s succeeded: Internet available in %s seconds", cmd, "{:.2f}".format(time.time() - start_time))
+attempts = 0
+for cmd in cmds:
+    attempts += 1
+    logger.info(" -> Trying %s", cmd)
+    try:
+        test = subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        logger.info("Internet connection is up: %s attempt(s)", attempts)
         sys.exit(0)
-    except subprocess.CalledProcessError:
-        logger.error("%s failed", cmd)
+    except Exception as e:
+        logger.warning("%s failed: %s", cmd, e)
         pass
 
-print("No internet connection detected using %s commands in %s seconds" % (
-    len(cmds), time.time() - start_time))
+logger.error("No internet connection detected using %s commands in %s seconds" % (
+    attempts, time.time() - start_time))
 exit(1)
