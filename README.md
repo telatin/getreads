@@ -9,7 +9,7 @@ a list of accession IDs.
 
 ```bash
 # Suggestion: replace main with a version from the releases 
-  nextflow run telatin/getreads -r main   -profile docker --list list.txt --outdir sra --list list.txt --outdir sra
+  nextflow run telatin/getreads -r main   -profile docker \
      --list list.txt --outdir downloaded-reads/
 ```
 
