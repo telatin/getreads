@@ -48,7 +48,7 @@ I made this minimal pipeline as a backup plan.
 
 ## Screenshot
 
-![Screenshot](docs/imgs/getreads-test.png)
+![Screenshot](docs/imgs/carbon.svg)
 
 * [Notes](test/README.md)
 * [Releases](docs/RELEASES.md)
