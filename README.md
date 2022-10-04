@@ -7,6 +7,8 @@ a list of accession IDs.
 
 ## :magic_wand: Usage
 
+See [installation](docs/INSTALLATION.md) for more details
+
 ```bash
 # Suggestion: replace main with a version from the releases 
   nextflow run telatin/getreads -r main   -profile docker \
