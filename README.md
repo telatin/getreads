@@ -1,4 +1,6 @@
-# :arrow_down: getreads (aka *ffq-sake*)
+![GetReads](docs/getreads-logo.png)
+
+# getreads (aka *ffq-sake*)
 
 [![nextflow-ci](https://github.com/telatin/getreads/actions/workflows/ci.yaml/badge.svg)](https://github.com/telatin/getreads/actions/workflows/ci.yaml)
 
