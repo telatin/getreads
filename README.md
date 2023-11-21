@@ -3,11 +3,10 @@
 
 # getreads [unsupported]
 
-```note
-I recommend using [**nf-core/fetchngs**](https://github.com/nf-core/fetchngs)
-```
+> [!NOTE]
+> I recommend using [**nf-core/fetchngs**](https://github.com/nf-core/fetchngs)
+> This repository is **no longer supported** as of 2023
 
-[![nextflow-ci](https://github.com/telatin/getreads/actions/workflows/ci.yaml/badge.svg)](https://github.com/telatin/getreads/actions/workflows/ci.yaml)
 
 A minimal pipeline to download FASTQ files from SRA given
 a list of accession IDs.
