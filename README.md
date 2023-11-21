@@ -1,7 +1,11 @@
 <a href="#readme" description="GetReads Repository">
 <img align="right" width="128" height="128" src="docs/getreads-logo.png"></a>
 
-# getreads (aka *ffq-sake*)
+# getreads [unsupported]
+
+```note
+I recommend using [**nf-core/fetchngs**](https://github.com/nf-core/fetchngs)
+```
 
 [![nextflow-ci](https://github.com/telatin/getreads/actions/workflows/ci.yaml/badge.svg)](https://github.com/telatin/getreads/actions/workflows/ci.yaml)
 
