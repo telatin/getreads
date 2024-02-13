@@ -51,6 +51,7 @@ process SPLIT {
 
     script:
     """
+    # Split the file into individual lines
     split -l 1 ${file} ${id}_
     """
 }
@@ -128,7 +129,7 @@ process GZIP {
     script:
     real_zip = "readlink -f ${sym_zip}"
     """
-    gzip -f "\$(${real_zip})" > "\$(basename ${sym_zip}).gz"
+    cat "\$(${real_zip})" | gzip -c > "\$(basename ${sym_zip}).gz"
     """
 }
 process TABLE {
