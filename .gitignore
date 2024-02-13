@@ -4,3 +4,4 @@ work
 test/out
 ./reads/
 getreads
+*.simg
