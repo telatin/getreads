@@ -11,7 +11,7 @@ params.wait = 2
 params.ignore = false
 params.queue = false
 params.debug = false
- 
+params.nostats = false
 
 include { IS_ONLINE; URLS; WGET; COLLECT; SPLIT; CHECK; TABLE; GZIP } from './modules/misc'
 include { FFQ; FFQLIST; FFQ_NORETRY} from './modules/ffq'
@@ -20,8 +20,32 @@ include { STATS } from './modules/seqfu'
  *   DSL2 allows to reuse channels
  */
 
-check_input = file(params.list, checkIfExists: true)
-if (check_input.isEmpty()) {exit 1, "File provided with --list is empty: ${check_input.getName()}!"}
+
+
+ 
+// prints to the screen and to the log
+log.info """
+         GetReads (version 2.2)
+         ===================================
+         --list         : ${params.list}
+         --outdir       : ${params.outdir}
+         --wait         : attempt * ${params.wait} s
+
+         [debug-ignore: ${params.ignore}]
+         [resources   : ${params.max_cpus}; ${params.max_memory};${params.max_time}]
+         """
+         .stripIndent()
+
+// check if params.list exists
+if (!file(params.list).exists()) {
+    log.error "ERROR: File ${params.list} does not exist (--list)"
+    exit 1
+}
+// check if file is empty
+if (file(params.list).size() == 0) {
+    log.error "ERROR: File '${params.list}' is empty (--list)"
+    exit 1
+}
 
 
 Channel
@@ -82,11 +106,13 @@ workflow {
         urls.view()
     }
     WGET(urls)
-    STATS(WGET.out)
 
-    COLLECT(STATS.out.map{it -> it[1]}.collect())
-    CHECK(COLLECT.out, file(params.list, checkIfExists: true))
-    //TABLE(FFQ.out.collect())
-    GZIP((CHECK.out.fastq).flatten())
-    TABLE(DATA.map{it -> it[1]}.collect())
+    if (params.nostats == false) {
+      STATS(WGET.out)
+      COLLECT(STATS.out.map{it -> it[1]}.collect())
+      CHECK(COLLECT.out, file(params.list, checkIfExists: true))
+      //TABLE(FFQ.out.collect())
+      GZIP((CHECK.out.fastq).flatten())
+      TABLE(DATA.map{it -> it[1]}.collect())
+    } 
 }
