@@ -1,16 +1,24 @@
-# :arrow_down: getreads (aka *ffq-sake*)
+<a href="#readme" description="GetReads Repository">
+<img align="right" width="128" height="128" src="docs/getreads-logo.png"></a>
 
-[![nextflow-ci](https://github.com/telatin/getreads/actions/workflows/ci.yaml/badge.svg)](https://github.com/telatin/getreads/actions/workflows/ci.yaml)
+# getreads [unsupported]
+
+> [!NOTE]
+> I recommend using [**nf-core/fetchngs**](https://github.com/nf-core/fetchngs)
+> This repository is **no longer supported** as of 2023
+
 
 A minimal pipeline to download FASTQ files from SRA given
 a list of accession IDs.
 
 ## :magic_wand: Usage
 
+See [installation](docs/INSTALLATION.md) for more details
+
 ```bash
 # Suggestion: replace main with a version from the releases 
-nextflow run telatin/getreads -r main \
-  -p docker --list list.txt --outdir sra
+  nextflow run telatin/getreads -r main   -profile docker \
+     --list list.txt --outdir downloaded-reads/
 ```
 
 Where:
@@ -48,7 +56,7 @@ I made this minimal pipeline as a backup plan.
 
 ## Screenshot
 
-![Screenshot](docs/imgs/getreads-test.png)
+![Screenshot](docs/imgs/carbon.svg)
 
 * [Notes](test/README.md)
 * [Releases](docs/RELEASES.md)
@@ -58,6 +66,6 @@ I made this minimal pipeline as a backup plan.
 
 If you use this pipeline, please cite:
 
-* Gálvez-Merchán, Á., et al. (2022). *Metadata retrieval from sequence databases with ffq*. bioRxiv 2022.05.18.492548.
-* Telatin, A., et al. (2020). *SeqFu: A Suite of Utilities for the Robust and Reproducible Manipulation of Sequence File*s. Bioengineering 2021, 8, 59. [10.3390/bioengineering8050059](https://doi.org/10.3390/bioengineering8050059)
+* Gálvez-Merchán, Á., et al. (2023). *Metadata retrieval from sequence databases with ffq*. [Bioinformatics](https://doi.org/10.1093/bioinformatics/btac667)
+* Telatin, A., et al. (2020). *SeqFu: A Suite of Utilities for the Robust and Reproducible Manipulation of Sequence File*s. [Bioengineering](https://doi.org/10.3390/bioengineering8050059)
 
