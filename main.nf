@@ -25,7 +25,7 @@ include { STATS } from './modules/seqfu'
  
 // prints to the screen and to the log
 log.info """
-         GetReads (version 2.2)
+         GetReads (version 3.0)
          ===================================
          --list         : ${params.list}
          --outdir       : ${params.outdir}
@@ -89,14 +89,17 @@ workflow SINGLE {
 }
 
 workflow {
+    // Check if pipeline is running online
     IS_ONLINE()
+
+    // Get project metadata with FFQ "sake"
     if (params.ignore) {
         DATA = FFQ_NORETRY(ids, params.wait, IS_ONLINE.out)
     } else {
         DATA = FFQ(ids, params.wait, IS_ONLINE.out)
     }
-    //FFQ(ids, params.wait)
-    //URLS(FFQ.out)
+
+    // Collect URIs
     URLS(DATA)
     SPLIT(URLS.out)
     urls = (SPLIT.out).transpose()

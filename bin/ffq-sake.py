@@ -34,14 +34,14 @@ def ffq(sample, outfile, bin):
         stderr = stderr.decode("utf-8")
         if pipes.returncode != 0:
             if "ERROR 400" in stderr:
-                print("[ERROR] Error 400: for %s (unrecoverable: abort)" % sample, file=sys.stderr)
+                print("[ERROR] Error 400: for %s (false,false: unrecoverable: abort)" % sample, file=sys.stderr)
                 return False, False
             elif "429" in stderr:
-                print("[ERROR] 429: for %s (try again)" % sample, file=sys.stderr)
+                print("[ERROR] 429: for %s (false,true: will try again)" % sample, file=sys.stderr)
                 return False, True
             else:
-                print("[ERROR] Unknown error for %s" % sample, file=sys.stderr)
-                return False
+                print("[ERROR] Unknown error for %s (false,false)" % sample, file=sys.stderr)
+                return False, False
         else:
             return True, False
     except Exception as e:
@@ -57,16 +57,17 @@ def tryFFQ(id, outdir, retry_times=3, pause=2.0, verbose=False, bin="ffq"):
         if verbose:
             print("  [INFO] Running ffq #%s/%s: %s" % (attempt_number + 1,  retry_times, " ".join([bin, id, "-o", outfile])), file=sys.stderr)
         success, retry = ffq(id, outfile, bin)
-        if success:
+        if success and retry is True:
             # Check json is not empty
             data = json.load(open(outfile))
             if id not in data:
                 print("  [ERROR] Empty json for %s" % id, file=sys.stderr)
                 return -1
             return attempt_number + 1
-        elif not retry:
+        elif not success and not retry:
             if verbose:
                 print("  [ERROR] unrecoverable ffq error %s" % id, file=sys.stderr)
+            break
     
     if verbose:
         print("  [ERROR] Failed to run ffq for %s" % id, file=sys.stderr)
