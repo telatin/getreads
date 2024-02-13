@@ -62,7 +62,7 @@ def tryFFQ(id, outdir, retry_times=3, pause=2.0, verbose=False, bin="ffq"):
             data = json.load(open(outfile))
             if id not in data:
                 print("  [ERROR] Empty json for %s" % id, file=sys.stderr)
-                return False
+                return -1
             return attempt_number + 1
         elif not retry:
             if verbose:
@@ -101,23 +101,13 @@ if __name__ == "__main__":
         if attempt >= 0:
             if args.verbose:
                 print("[INFO] Success %s (attempt=%s)" % (ID, attempt), file=sys.stderr)
-            samples_status[ID] = "success, ffq (%s)" % attempt
+            samples_status[ID] = "pass, ffq (%s)" % attempt
         else:
             if args.verbose:
                 print("[INFO] Failed %s" % ID, file=sys.stderr)
             samples_status[ID] = "failed"
 
-        #else:
-        #    if args.verbose:
-        #        print("[INFO] ffq failed, trying fasterdump", file=sys.stderr)
-        #    fasterStatus = tryFasterDump(ID, args.output_dir, args.threads, args.verbose)
 
-        #    if fasterStatus:
-        #        samples_status[ID] = "success, fasterdump"
-        #        print("%s OK" % ID)
-        #    else:
-        #        samples_status[ID] = "failed"
-    
     for sample in samples_status:
         print("%s: %s" % (sample, samples_status[sample]))
             
