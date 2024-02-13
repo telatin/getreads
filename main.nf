@@ -37,7 +37,7 @@ id_file = Channel
  
 // prints to the screen and to the log
 log.info """
-         GetReads (version 2)
+         GetReads (version 3)
          ===================================
          list         : ${params.list}
          outdir       : ${params.outdir}
