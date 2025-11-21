@@ -1,11 +1,11 @@
 <a href="#readme" description="GetReads Repository">
 <img align="right" width="128" height="128" src="docs/getreads-logo.png"></a>
 
-# getreads [unsupported]
+# getreads  
 
 > [!NOTE]
-> I recommend using [**nf-core/fetchngs**](https://github.com/nf-core/fetchngs)
-> This repository is **no longer supported** as of 2023
+> Consider using [**nf-core/fetchngs**](https://github.com/nf-core/fetchngs)
+ 
 
 
 A minimal pipeline to download FASTQ files from SRA given
