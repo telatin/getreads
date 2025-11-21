@@ -23,19 +23,6 @@ include { STATS } from './modules/seqfu'
 
 
  
-// prints to the screen and to the log
-log.info """
-         GetReads (version 3.0)
-         ===================================
-         --list         : ${params.list}
-         --outdir       : ${params.outdir}
-         --wait         : attempt * ${params.wait} s
-
-         [debug-ignore: ${params.ignore}]
-         [resources   : ${params.max_cpus}; ${params.max_memory};${params.max_time}]
-         """
-         .stripIndent()
-
 // check if params.list exists
 if (!file(params.list).exists()) {
     log.error "ERROR: File ${params.list} does not exist (--list)"
@@ -61,7 +48,7 @@ id_file = Channel
  
 // prints to the screen and to the log
 log.info """
-         GetReads (version 3)
+         GetReads (version 3.1)
          ===================================
          list         : ${params.list}
          outdir       : ${params.outdir}
@@ -98,7 +85,7 @@ workflow {
     } else {
         DATA = FFQ(ids, params.wait, IS_ONLINE.out)
     }
-
+ 
     // Collect URIs
     URLS(DATA)
     SPLIT(URLS.out)
