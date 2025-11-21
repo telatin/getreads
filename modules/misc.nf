@@ -105,7 +105,7 @@ process CHECK {
 
     output:
     path("check.*")
-    path("*.fastq"), emit: fastq optional true
+    path("*.fastq"), emit: fastq, optional: true
 
     script:
     """
@@ -140,8 +140,8 @@ process TABLE {
     path("*")
 
     output:
-    path("table.tsv"), emit: table optional true
-    path("*.gz"), emit: reads      optional true
+    path("table.tsv"), emit: table, optional: true
+    path("*.gz"), emit: reads, optional: true
 
     script:
     """

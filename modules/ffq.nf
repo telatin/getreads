@@ -39,7 +39,7 @@ process FFQ  {
     
     
     output:
-    tuple val(id), path("*.json") optional true
+    tuple val(id), path("*.json"), optional: true
 
     script:
     """

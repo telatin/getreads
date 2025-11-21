@@ -16,9 +16,58 @@ params.nostats = false
 include { IS_ONLINE; URLS; WGET; COLLECT; SPLIT; CHECK; TABLE; GZIP } from './modules/misc'
 include { FFQ; FFQLIST; FFQ_NORETRY} from './modules/ffq'
 include { STATS } from './modules/seqfu'
-/* 
+/*
  *   DSL2 allows to reuse channels
  */
+
+/*
+ *   Function to validate accession list
+ */
+def validateAccessionList(listFile) {
+    def validIds = []
+    def lineNum = 0
+    def warnings = []
+
+    listFile.eachLine { line ->
+        lineNum++
+        def trimmed = line.trim()
+
+        // Skip empty lines and comments
+        if (trimmed.isEmpty() || trimmed.startsWith('#')) {
+            return
+        }
+
+        // Check for spaces or tabs
+        if (trimmed.contains(' ') || trimmed.contains('\t')) {
+            warnings.add("Line ${lineNum}: Contains whitespace - using first token only: '${trimmed}'")
+            // Try to use first token
+            trimmed = trimmed.split(/\s+/)[0]
+        }
+
+        // Basic accession format check (SRR/ERR/DRR/SRX/ERX/DRX followed by digits)
+        if (!trimmed.matches(/^[SED]R[RXPS]\d+$/)) {
+            warnings.add("Line ${lineNum}: '${trimmed}' doesn't match expected accession format (e.g., SRR123456, ERR789012)")
+        }
+
+        // Check for duplicates
+        if (validIds.contains(trimmed)) {
+            warnings.add("Line ${lineNum}: Duplicate accession '${trimmed}' (will be processed only once)")
+        } else {
+            validIds.add(trimmed)
+        }
+    }
+
+    // Print warnings
+    if (warnings.size() > 0) {
+        log.warn "=== Input Validation Warnings (${warnings.size()}) ==="
+        warnings.each { log.warn "  - ${it}" }
+        log.warn "=========================================="
+    }
+
+    log.info "Validated ${validIds.size()} unique accession(s) from ${lineNum} line(s)"
+
+    return validIds
+}
 
 
 
@@ -34,12 +83,16 @@ if (file(params.list).size() == 0) {
     exit 1
 }
 
+// Validate accession list and create channel
+def validatedIds = validateAccessionList(file(params.list))
+
+if (validatedIds.size() == 0) {
+    log.error "ERROR: No valid accessions found in ${params.list}"
+    exit 1
+}
 
 Channel
-    .from(file(params.list, checkIfExists: true))
-    .splitCsv(header:false, sep:'', strip:true)
-    .map { it[0] }
-    .unique()
+    .from(validatedIds)
     .set { ids }  
 
 id_file = Channel
