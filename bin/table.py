@@ -1,29 +1,40 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
-Gather information about the samples (JSON from ffq)
-and print a table of the results.
+Read ffq JSON sample info and print it as a TSV table.
 """
 
 import argparse
-import os, sys, json
- 
-if __name__ == "__main__":
-    args = argparse.ArgumentParser(prog="table")
-    args.add_argument("FILES", help="ffq JSON files", nargs="+")
-    args = args.parse_args()
-    
+import json
+import sys
+
+def safe_str(val):
+    """Ensure value is a string without tabs."""
+    if val is None:
+        return ""
+    s = str(val)
+    return s.replace("\t", " ")
+
+def main():
+    parser = argparse.ArgumentParser(prog="table")
+    parser.add_argument("FILES", nargs="+", help="ffq JSON files")
+    args = parser.parse_args()
+    print("Reading JSON files: %s" % args.FILES, file=sys.stderr)
+
     keys = ["accession", "experiment", "study", "sample", "title"]
     print("\t".join(keys))
-    for file in args.FILES:
-        with open(file, "r") as f:
+
+    for filename in args.FILES:
+        with open(filename, "r") as f:
             data = json.load(f)
-            for sample in data:
-                line = []
-                for h in keys:
-                    if h in data[sample]:
-                        val = data[sample][h] if not "\t" in data[sample][h] else  data[sample][h].replace("\t", " ")
-                        line.append(val)
-                    else:
-                        line.append("")
-                
-                print("\t".join(line))
+            print(" Read JSON file: %s" % filename, file=sys.stderr)
+
+        for sample_id, sample_data in data.items():
+            print("     Sample ID: %s" % sample_id, file=sys.stderr)
+            row = []
+            for key in keys:
+                value = sample_data.get(key, "")
+                row.append(safe_str(value))
+            print("\t".join(row))
+
+if __name__ == "__main__":
+    main()
