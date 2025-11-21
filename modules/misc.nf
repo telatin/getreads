@@ -109,7 +109,7 @@ process CHECK {
 
     script:
     """
-    check.py --stats stats.txt --list list.txt --rescue --verbose --threads ${task.cpus} > check.txt 2> check.log
+    checkStats.py --stats stats.txt --list list.txt --rescue --verbose --threads ${task.cpus} > check.txt 2> check.log
     grep . check.*
     rmIfEmpty.py -s fastq -d . --verbose
     """

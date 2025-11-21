@@ -26,6 +26,12 @@ process FFQ  {
     publishDir "$params.outdir/json/", 
         mode: 'copy'
     
+    conda "${moduleDir}/environment.yml"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/ffq:0.3.1--pyhdfd78af_0':
+        'quay.io/biocontainers/ffq:0.3.1--pyhdfd78af_0' }"
+
+
     input:
     val id
     val sleep
@@ -54,7 +60,13 @@ process VANILLA_FFQ  {
     label "error_retry"
     publishDir "$params.outdir/json/", 
         mode: 'copy'
-    
+
+    conda "${moduleDir}/environment.yml"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/ffq:0.3.1--pyhdfd78af_0':
+        'quay.io/biocontainers/ffq:0.3.1--pyhdfd78af_0' }"
+
+
     input:
     val id
     val sleep
@@ -76,7 +88,13 @@ process FFQ_NORETRY  {
     label "error_retry"
     publishDir "$params.outdir/json/", 
         mode: 'copy'
-    
+
+    conda "${moduleDir}/environment.yml"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/ffq:0.3.1--pyhdfd78af_0':
+        'quay.io/biocontainers/ffq:0.3.1--pyhdfd78af_0' }"
+
+
     input:
     val id
     val sleep
